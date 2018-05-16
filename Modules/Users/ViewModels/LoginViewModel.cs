@@ -71,7 +71,7 @@ namespace Modules.Users.ViewModels
             }
             else
             {
-                Message = "Oops! Try Again";
+                Message = "Wrong Credintials Try Again";
                 return;
             }
         }
