@@ -27,5 +27,19 @@ namespace Data.Repository.Repositories
             return DataContext.Users.FirstOrDefault(u => u.LoginName == username && u.LoginPassword == password);
         }
 
+        public void NewUser(string name, string email, string loginName, string password)
+        {
+            DataContext.Users.Add(new User {
+                Name = name,
+                Email  = email,
+                LoginName = loginName,
+                LoginPassword= password,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                HangedAt  = DateTime.Now,
+                DeletedAt = DateTime.Now
+            });
+            DataContext.SaveChanges();
+        }
     }
 }

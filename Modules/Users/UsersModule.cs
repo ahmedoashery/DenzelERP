@@ -18,7 +18,7 @@ namespace Users
 
         public void Initialize()
         {
-            _regionManager.RegisterViewWithRegion("ContentRegion",typeof(Login));
+            _regionManager.RegisterViewWithRegion("ContentRegion",typeof(UsersPage));
         }
     }
 }

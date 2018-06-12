@@ -5,9 +5,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="300" 
+             d:DesignWidth="300"
+             Cursor="{Binding CursorState}"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
+    
+    
     <Grid VerticalAlignment="Center"
           HorizontalAlignment="Center">
         <Grid.RowDefinitions>
@@ -30,7 +34,9 @@
         <PasswordBox Grid.Row="1" Grid.Column="1" Margin="0,0,10,10"
                      x:Name="UserPassword" />
 
-        <Button Grid.Row="2" Grid.Column="1" Padding="10,2" Content="Login"
+        <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource TwitterButtonStyle}"
+                Padding="10,2" Content="Login"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 Command="{Binding LoginCommand}"

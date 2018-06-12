@@ -1,4 +1,5 @@
 ﻿using Data.Repository;
+using Data.Repository.UnitOfWork;
 using Modules.Users.Services;
 using Modules.Users.Views;
 using Prism.Commands;
@@ -13,6 +14,7 @@ namespace Modules.Users.ViewModels
     {
 
         private string _name;
+        private string _email;
         private string _loginname;
         private string _loginPassword;
 
@@ -20,6 +22,12 @@ namespace Modules.Users.ViewModels
         {
             get { return _name; }
             set { SetProperty(ref _name, value); }
+        }
+
+        public string Email
+        {
+            get { return _email; }
+            set { SetProperty(ref _email, value); }
         }
 
         public string LoginName
@@ -35,7 +43,9 @@ namespace Modules.Users.ViewModels
         }
         public NewUserViewModel()
         {
-            CreateUserCommand = new DelegateCommand<object>(Save);
+            CreateUserCommand = new DelegateCommand<object>(Save)
+                                                                 .ObservesProperty(()=>LoginName)
+                                                                 .ObservesProperty(()=>LoginPassword);
         }
 
         public DelegateCommand<object> CreateUserCommand { get; set; }
@@ -51,6 +61,8 @@ namespace Modules.Users.ViewModels
 
             DataContext Context = new DataContext();
             //Context.Users.(Name, LoginName, LoginPassword);
+            UnitOfWork uof = new UnitOfWork(Context);
+            uof.Users.NewUser(Name, Email, LoginName, LoginPassword);
         }
         private string ConvertToUnsecureString(SecureString securePassword)
         {

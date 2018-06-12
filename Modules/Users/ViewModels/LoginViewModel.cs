@@ -7,16 +7,15 @@ using Prism.Mvvm;
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Windows.Input;
 
 namespace Modules.Users.ViewModels
 {
     public class LoginViewModel : BindableBase
     {
         UnitOfWork data = new UnitOfWork(new DataContext());
-        User user = null;
+        private User user;
         public DelegateCommand<object> LoginCommand { get; set; }
-
-        //private User CurrentUser = null;
 
         private string _Username;
         public string Username
@@ -46,10 +45,17 @@ namespace Modules.Users.ViewModels
             set { SetProperty(ref _session, value); }
         }
 
+        private Cursor _cursorState;
+        public Cursor CursorState
+        {
+            get { return _cursorState; }
+            set { SetProperty(ref _cursorState, value); }
+        }
+        
+
         public LoginViewModel()
         {
-            LoginCommand = new DelegateCommand<object>(Login, CanLogin)
-                                                                       .ObservesProperty(() => Username)
+            LoginCommand = new DelegateCommand<object>(Login, CanLogin).ObservesProperty(() => Username)
                                                                        .ObservesProperty(() => Password);
         }
 
@@ -60,17 +66,21 @@ namespace Modules.Users.ViewModels
 
         private void Login(object PasswordParameter)
         {
+            CursorState = Cursors.Wait;
+
             Password = UnSecuredString(PasswordParameter);
-            
-            User user = data.Users.Authenticate(Username, Password);
+
+            user = data.Users.Authenticate(Username, Password);
 
             if (user != null)
             {
                 Message = "Welcome! =>  " + user.Name;
+                CursorState = Cursors.Arrow;
                 Password = null;
             }
             else
             {
+                CursorState = Cursors.Arrow;
                 Message = "Wrong Credintials Try Again";
                 return;
             }
@@ -78,8 +88,7 @@ namespace Modules.Users.ViewModels
 
         private string UnSecuredString(object SecuredPassword)
         {
-            var passwordContainer = SecuredPassword as ISecurePassword;
-            if (passwordContainer != null)
+            if (SecuredPassword is ISecurePassword passwordContainer)
             {
                 var securedString = passwordContainer.SecurePassword;
                 var unSecuredString = ConvertToUnsecureString(securedString);
